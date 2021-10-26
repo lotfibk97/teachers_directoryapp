@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <!--Add,Edit,List profs,List subjects-->
+    <title>Home</title>
+</head>
+
+<body>
+    
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'teachers' %}">Home</a>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{% url 'add_teacher' %}">Add</a>
+
+
+                    </li>
+                    <li class="nav-item">
+
+                        <a class="nav-link active" aria-current="page" href="{% url 'add_subject' %}" data-bs-toggle="modal"
+                            data-bs-target="#AddSubject">
+                            Add Subject
+                        </a>
+                    </li>
+                    <li class="nav-item">
+
+
+                        <a class="nav-link active" aria-current="page" href="#" data-bs-toggle="modal"
+                            data-bs-target="#ImportTeachers">
+                            Import Teachers
+                        </a>
+                    </li>
+
+                </ul>
+                <a class="pull-right nav-link" href="{% url 'logout' %}">Log out</a>
+            </div>
+        </div>
+    </nav>
+    <!-- Modal Add Subject -->
+<div class="modal fade" id="AddSubject" tabindex="-1" aria-labelledby="AddSubjectLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="AddSubjectLabel">Add Subjects</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" action="{% url 'add_subject' %} ">
+                {% csrf_token %}
+            <div class="modal-body">
+                <label for="subjectName" class="form-label">Subject Name</label>
+
+                {{form.name}}
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <input type="submit" class="btn btn-primary" value="Add subject"/>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+    <!-- Modal Import Teachers -->
+       <!-- Modal Import Teachers -->
+<div class="modal fade" id="ImportTeachers" tabindex="-1" aria-labelledby="ImportTeachersLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="ImportTeachersLabel">Add Subjects</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form method="POST" enctype="multipart/form-data" action="{% url 'csv_mass_import' %}">
+
+        <div class="modal-body">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="file" class="form-label">Import CSV file</label>
+                    <input class="form-control" type="file" id="file" name="file">
+                  </div>
+               <!-- <input type="file" id="file" name="file">-->
+               <!-- <input type="submit" class="btn btn-secondary" data-bs-dismiss="modal" />-->
+
+               <!-- <input type="submit">-->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <!--  <button type="button" class="btn btn-primary">Import</button>-->
+          <input type="submit" class="btn btn-primary"/>
+
+        </div>
+    </form>
+
+      </div>
+    </div>
+  </div>
+
+    <div class="row bg-light ">
+        <div class="col-1">
+
+        </div>
+        <div class="col-7">
+            <div class="row">
+                <div class="col-12">
+                    
+                    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                        <div class="container-fluid">
+                            <div class="input-group">
+                                <a type="button" class="btn btn-outline-primary" href="{% url 'teachers' %} ">reset</a>
+
+                                <input id="user_search" onchange="search()" type="search" class="form-control rounded" placeholder="Search"
+                                    aria-label="Search" aria-describedby="search-addon" />
+                                <a id="search_button" type="submit" class="btn btn-outline-primary"
+                                    href="#">search</a>
+                            </div>
+                        </div>
+                    </nav>
+                
+                </div>
+                <div class="col-2">
+
+                </div>
+
+                <div class="col-4">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="saerchvar" id="searchByLastName">
+                        <label class="form-check-label" for="searchByLastName">
+                            By last name
+                        </label>
+                    </div>
+                </div>
+                <div class="col-4">
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="saerchvar" id="searchBySubject" checked>
+                        <label class="form-check-label" for="searchBySubject">
+                            By subject
+                        </label>
+                    </div>
+
+                </div>
+
+                <div class="col-2">
+
+                </div>
+                <div class="col-12">
+
+                </div>
+                <div class="col-12">
+                    <div class="card text-white bg-transparent mb-3" style="height: 460px; ">
+                        <div class="card-header bg-success text-center">Teachers</div>
+                        <div class="card-body bg-transparent text-black" style="overflow-y: auto;">
+
+
+                            <ul class="list-group">
+                                {% for teacher in teachers %}
+                                <li class="list-group-item">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="row">
+                                                <div class="col-1"></div>
+                                                <div class="col-5">
+                                                    <img style="height: 40px; "
+                                                        src="https://cdn.pixabay.com/photo/2017/06/13/12/53/profile-2398782_640.png "
+                                                        class="rounded-circle" alt="Cinque Terre">
+
+                                                    <strong> {{teacher.first_name}} {{teacher.last_name}}</strong>
+                                                </div>
+                                                <div class="col-5">
+                                                    <div class="btn-group" role="group" aria-label="Basic example">
+                                                        <a type="button" class="btn btn-primary"
+                                                            href="{% url 'teacher_profile' teacher.id%} ">Profile</a>
+                                                        <a type="button" class="btn btn-warning"
+                                                            href="{% url 'edit_teacher' teacher.id%} ">Edit</a>
+                                                        <a type="button" class="btn btn-danger"
+                                                            href="{% url 'delete_teacher' teacher.id%} ">Delete</a>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+
+                                </li>
+                                {% endfor %}
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-3">
+
+            <div class="row">
+
+                <div class="col-12">
+                    <div class="card text-white bg-transparent mb-3 text-center"
+                        style="height: 500px; ">
+                        <div class="card-header bg-success">Subjects</div>
+                        <div class="card-body bg-transparent text-black" style="overflow-y: auto;">
+
+                            <ul class="list-group">
+                                {% for subject in subjects %}
+                                <li class="list-group-item">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            {{subject.name}}
+
+                                        </div>
+
+                                    </div>
+
+
+                                </li>{% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+        <div class="col-1">
+
+        </div>
+    </div>
+
+
+    <!-- Bootstrap JS -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
+
+    <!--form method="POST" enctype="multipart/form-data" action="{% url 'csv_mass_import' %}">
+        {% csrf_token %}
+        <input type="file" id="file" name="file">
+        <input type="submit">Import CSV</input>
+    </form-->
+</body>
+<script >
+function search(){
+    //alert(document.getElementById('user_search').value)
+    if (document.getElementById('searchBySubject').checked){
+    document.getElementById('search_button').href ="/teacher_filtering_by_subject/" + document.getElementById('user_search').value  
+    }
+    else{
+        document.getElementById('search_button').href ="/teacher_filtering_by_lastname/" + document.getElementById('user_search').value  
+        
+    }
+}
+</script>
+
+</html>
