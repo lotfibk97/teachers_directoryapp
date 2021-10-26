@@ -32,8 +32,10 @@ def add_teacher(request):
             for subject in subjects:
                 if request.POST.get(str(subject.id)) is not None:
                     a, _ = TeachingSubject.objects.update_or_create(subject=subject,teacher=obj)
-            
-            a.save()
+            try:
+                a.save()
+            except:
+                pass    
             messages.success(request, 'The teacher has been added successfully!')
             return redirect(reverse('teachers'))
             """ redirect to teachers list """
