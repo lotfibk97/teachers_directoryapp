@@ -76,12 +76,17 @@ def edit_teacher(request, id):
                 else:    
                     obj.profile_picture = request.FILES.get('profile_picture')
                 subjects = Subject.objects.all()
+                teaching_subjects = TeachingSubject.objects.filter(teacher=teacher)
+                for teaching_subject in teaching_subjects:
+                    teaching_subject.delete()
                 obj.save()
                 for subject in subjects:
                     if request.POST.get(str(subject.id)) is not None:
                         a, _ = TeachingSubject.objects.update_or_create(subject=subject,teacher=obj)
-                
-                a.save()
+                try:
+                    a.save()
+                except:
+                    pass
                 messages.success(request, "The teacher's informations have been updated successfully")
                 """ show success message """
 
