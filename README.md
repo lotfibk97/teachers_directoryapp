@@ -14,7 +14,7 @@ This is a lightweight teacher directory app that contains data about teachers.
   ```pip install -r requirements.txt``` (or ```python -m pip install -r requirements.txt```)
   
   
-  ```python manage.py makemigrations```
+  ```python manage.py makemigrations``` ```python manage.py makemigrations directory``` (if the first one doesn't work)
   
   
   ```python manage.py migrate```
