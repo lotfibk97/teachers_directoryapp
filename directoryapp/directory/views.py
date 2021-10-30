@@ -35,7 +35,7 @@ def add_teacher(request):
             try:
                 a.save()
             except:
-                pass    
+                messages.error(request, 'You need to add a subject first')    
             messages.success(request, 'The teacher has been added successfully!')
             return redirect(reverse('teachers'))
             """ redirect to teachers list """
